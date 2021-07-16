@@ -21,6 +21,7 @@ class Robot:
 
     @property
     def age(self):
+        """Robot age."""
         return self.__age
 
     @age.setter
@@ -29,7 +30,8 @@ class Robot:
 
     @property
     def power(self):
-        """Robot power capacity."""
+        """Robot battery power capacity."""
+        return self.__power_capacity
 
     @power.setter
     def power(self, value):
@@ -39,6 +41,7 @@ class Robot:
 
     @property
     def check(self):
+        """check how much charge the robot has."""
         power = self.__power_capacity
         charge = "power:["+"#"*(power//10)+"."*((100-power)//10)+"]\n"
         if power <= 10:
