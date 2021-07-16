@@ -61,9 +61,9 @@ if __name__ == "__main__":
     r2d2.age = 20
     print(r2d2)
     print(r2d2.check)
-    r2d2.power = 60
+    r2d2.power = '60'
     print(r2d2.check)
-    r2d2.power = 30
+    r2d2.power = 110
     print(r2d2.check)
     r2d2.power = 15
     print(r2d2.check)
