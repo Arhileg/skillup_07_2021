@@ -23,7 +23,7 @@ class Stack:
     def push(self, value):
         try:
             val = int(value)
-            delay = .1 if val < 50 else .2
+            delay = 1 if val < 50 else 2
             self.__data.append(val)
             print("{} = Value:{} . Wait: {}".format(self.__name, val, delay))
             sleep(delay)
@@ -66,21 +66,20 @@ def generator_randint(n):
 
 def main():
     N = 10
+    count_stacks = 2
 
     # Stack
-    stack1 = Stack('stack1')
-    stack2 = Stack('stack2')
+    stasks = []
+    for i in range(count_stacks):
+        stasks.append(Stack('stack{}'.format(i+1)))
 
-    for i in generator_randint(N):
-        stack1.push(i)
-    print(stack1)
-
-    for i in generator_randint(N):
-        stack2.push(i)
-    print(stack2)
+    for stack in stasks:
+        for i in generator_randint(N):
+            stack.push(i)
+        print(stack)
 
     # StackAsync
-    asracks = [StackAsync('stack{}'.format(i+1)) for i in range(2)]
+    asracks = [StackAsync('asyncstack{}'.format(i+1)) for i in range(count_stacks)]
     tasks = [asrack.push(i) for asrack in asracks for i in generator_randint(N)]
 
     loop = asyncio.get_event_loop()
