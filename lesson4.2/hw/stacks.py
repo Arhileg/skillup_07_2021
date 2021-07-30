@@ -12,6 +12,10 @@ class Stack:
     def __repr__(self) -> str:
         return "{}={}".format(self.__name,str(self.__data))
 
+    @property
+    def name(self):
+        return self.__name
+
     def pop(self):
         try:
             value = self.__data[-1]
@@ -19,42 +23,39 @@ class Stack:
             return value
         except IndexError:
             return None
+
+    def push_sleep(self, delay):
+        sleep(delay)
+
+    def add_value(self, value):
+        self.__data.append(value)
+
+    def generate_delay(self, value):
+        return 1 if value < 50 else 2
 
     def push(self, value):
         try:
             val = int(value)
-            delay = 1 if val < 50 else 2
-            self.__data.append(val)
-            print("{} = Value:{} . Wait: {}".format(self.__name, val, delay))
-            sleep(delay)
+            delay =self.generate_delay(value)
+            self.add_value(val)
+            print("{} = Value:{} \t Wait: {}".format(self.__name, val, delay))
+            self.push_sleep(delay)
         except ValueError:
             print('Wrong value: \"{}\". Only ints'.format(value))
 
 
-class StackAsync:
+class StackAsync(Stack):
     def __init__(self, name):
-        self.__name = name
-        self.__data = []
-
-    def __repr__(self) -> str:
-        return "{}={}".format(self.__name,str(self.__data))
-
-    def pop(self):
-        try:
-            value = self.__data[-1]
-            del self.__data[-1]
-            return value
-        except IndexError:
-            return None
+        super().__init__(name)
 
     async def push(self, value):
         try:
             val = int(value)
-            delay = 1 if val < 50 else 2
-            self.__data.append(val)
-            print("{} = Value:{}. Wait: {}".format(self.__name, val, delay))
+            delay = self.generate_delay(value)
+            self.add_value(val)
+            print("{} = Value:{}. Wait: {}".format(self.name, val, delay))
             await asyncio.sleep(delay)
-            print("{} = Value:{} - Done".format(self.__name, val))
+            print("{} = Value:{} - Done".format(self.name, val))
         except ValueError:
             print('Wrong value: \"{}\". Only ints'.format(value))
 
@@ -71,7 +72,7 @@ def main():
     # Stack
     stasks = []
     for i in range(count_stacks):
-        stasks.append(Stack('stack{}'.format(i+1)))
+        stasks.append(Stack('stack_{}'.format(i)))
 
     for stack in stasks:
         for i in generator_randint(N):
@@ -79,7 +80,7 @@ def main():
         print(stack)
 
     # StackAsync
-    asracks = [StackAsync('asyncstack{}'.format(i+1)) for i in range(count_stacks)]
+    asracks = [StackAsync('asyncstack_{}'.format(i)) for i in range(count_stacks)]
     tasks = [asrack.push(i) for asrack in asracks for i in generator_randint(N)]
 
     loop = asyncio.get_event_loop()
